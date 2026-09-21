@@ -81,6 +81,24 @@ def PrzeliczanieMaskiBinarne(maska):
         maskaBinarna.append(0)
     return maskaBinarna
 
+def PrzeliczanieAdresuSieci(ip, maska):
+    adresSieci = []
+    for i in range(32):
+        if ip[i] == 1 and maska[i] == 1:
+            adresSieci.append(1)
+        else:
+            adresSieci.append(0)
+    return adresSieci
+
+def przeliczanieBroadcastu(adresSieci, maska):
+    Broadcast = []
+    for i in range(32):
+        if adresSieci[i] == 1 or maska[i] == 0:
+            Broadcast.append(1)
+        else:
+            Broadcast.append(0)
+    return Broadcast
+
 Abin = przeliczanieBinarne(A)
 Bbin = przeliczanieBinarne(B)
 Cbin = przeliczanieBinarne(C)
@@ -92,6 +110,14 @@ maskaBinarna = PrzeliczanieMaskiBinarne(maska)
 maskaBinarnaRozdzielona = rozdzielanieIp(maskaBinarna)
 maskaDziesietna = przeliczanieIpDziesietne(maskaBinarnaRozdzielona[0], maskaBinarnaRozdzielona[1], maskaBinarnaRozdzielona[2], maskaBinarnaRozdzielona[3])
 
+adresSieciBinarny = PrzeliczanieAdresuSieci(ipv4, maskaBinarna)
+adresSieciBinarnyRozdzielony = rozdzielanieIp(adresSieciBinarny)
+adresSieciDziesiatkowy = przeliczanieIpDziesietne(adresSieciBinarnyRozdzielony[0], adresSieciBinarnyRozdzielony[1], adresSieciBinarnyRozdzielony[2], adresSieciBinarnyRozdzielony[3])
+
+BroadcastBinarny = przeliczanieBroadcastu(adresSieciBinarny, maskaBinarna)
+BroadcastBinarnyRozdzielony = rozdzielanieIp(BroadcastBinarny)
+BroadcastDziesiatkowy = przeliczanieIpDziesietne(BroadcastBinarnyRozdzielony[0], BroadcastBinarnyRozdzielony[1], BroadcastBinarnyRozdzielony[2], BroadcastBinarnyRozdzielony[3])
+
 # Wypisywanie odpowiedzi
 if miesiacUrodzenia < 10:
     print(f"Data Urodzenia: {dzienUrodzenia}.0{miesiacUrodzenia}")
@@ -102,3 +128,7 @@ wypisywanieIpNieBinarne(A, B, C, D)
 print(f"Maska CIDR: /{maska}")
 print("Maska dziesiętna:", end=" ")
 wypisywanieIpNieBinarne(maskaDziesietna[0], maskaDziesietna[1], maskaDziesietna[2], maskaDziesietna[3])
+print("Adres sieci:", end=" ")
+wypisywanieIpNieBinarne(adresSieciDziesiatkowy[0], adresSieciDziesiatkowy[1], adresSieciDziesiatkowy[2], adresSieciDziesiatkowy[3])
+print("Broadcast:", end=" ")
+wypisywanieIpNieBinarne(BroadcastDziesiatkowy[0], BroadcastDziesiatkowy[1], BroadcastDziesiatkowy[2], BroadcastDziesiatkowy[3],)
