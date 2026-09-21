@@ -99,6 +99,38 @@ def przeliczanieBroadcastu(adresSieci, maska):
             Broadcast.append(0)
     return Broadcast
 
+def dodawanieDoIp(ip):
+    i = 31
+    while i > 1:
+        if ip[i] == 0:
+            ip[i] = 1
+            i += 1
+            while i < 32:
+                ip[i] = 0
+                i += 1
+            return ip
+        i -= 1
+
+def odejmowanieOdIp(ip):
+    i = 31
+    while i > 1:
+        if ip[i] == 1:
+            ip[i] = 0
+            i += 1
+            while i < 32:
+                ip[i] = 1
+                i += 1
+            return ip
+        i -= 1
+
+def przeliczanieAdresow(maska):
+    H = 32 - maska
+    P = 1
+    for i in range(H):
+        P *= 2
+    return P
+
+
 Abin = przeliczanieBinarne(A)
 Bbin = przeliczanieBinarne(B)
 Cbin = przeliczanieBinarne(C)
@@ -118,6 +150,17 @@ BroadcastBinarny = przeliczanieBroadcastu(adresSieciBinarny, maskaBinarna)
 BroadcastBinarnyRozdzielony = rozdzielanieIp(BroadcastBinarny)
 BroadcastDziesiatkowy = przeliczanieIpDziesietne(BroadcastBinarnyRozdzielony[0], BroadcastBinarnyRozdzielony[1], BroadcastBinarnyRozdzielony[2], BroadcastBinarnyRozdzielony[3])
 
+pierwszyHostBinarny = dodawanieDoIp(adresSieciBinarny)
+pierwszyHostBinarnyRozdzielony = rozdzielanieIp(pierwszyHostBinarny)
+pierwszyHostDziesiatkowy = przeliczanieIpDziesietne(pierwszyHostBinarnyRozdzielony[0], pierwszyHostBinarnyRozdzielony[1], pierwszyHostBinarnyRozdzielony[2], pierwszyHostBinarnyRozdzielony[3])
+
+OstatniHostBinarny = odejmowanieOdIp(BroadcastBinarny)
+OstatniHostBinarnyRozdzielony = rozdzielanieIp(OstatniHostBinarny)
+OstatniHostDziesiatkowy = przeliczanieIpDziesietne(OstatniHostBinarnyRozdzielony[0], OstatniHostBinarnyRozdzielony[1], OstatniHostBinarnyRozdzielony[2], OstatniHostBinarnyRozdzielony[3])
+
+LiczbaAdresow = przeliczanieAdresow(maska)
+LiczbaHostow = LiczbaAdresow - 2
+
 # Wypisywanie odpowiedzi
 if miesiacUrodzenia < 10:
     print(f"Data Urodzenia: {dzienUrodzenia}.0{miesiacUrodzenia}")
@@ -132,3 +175,9 @@ print("Adres sieci:", end=" ")
 wypisywanieIpNieBinarne(adresSieciDziesiatkowy[0], adresSieciDziesiatkowy[1], adresSieciDziesiatkowy[2], adresSieciDziesiatkowy[3])
 print("Broadcast:", end=" ")
 wypisywanieIpNieBinarne(BroadcastDziesiatkowy[0], BroadcastDziesiatkowy[1], BroadcastDziesiatkowy[2], BroadcastDziesiatkowy[3],)
+print("Pierwszy host:", end=" ")
+wypisywanieIpNieBinarne(pierwszyHostDziesiatkowy[0], pierwszyHostDziesiatkowy[1], pierwszyHostDziesiatkowy[2], pierwszyHostDziesiatkowy[3])
+print("Ostatni host:", end=" ")
+wypisywanieIpNieBinarne(OstatniHostDziesiatkowy[0], OstatniHostDziesiatkowy[1], OstatniHostDziesiatkowy[2], OstatniHostDziesiatkowy[3])
+print(f"Liczba wszystkich adresów: {LiczbaAdresow}")
+print(f"Liczba dostępnych hostów: {LiczbaHostow}")
