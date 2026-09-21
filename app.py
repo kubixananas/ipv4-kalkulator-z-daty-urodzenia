@@ -20,6 +20,31 @@ def przeliczanieBinarne(dozmiany):
         dzielna /= 2
     return binarna
 
+def przeliczanieDziesietne(dozmiany):
+    dziesietna = 0
+    mnozna = 128
+    for i in dozmiany:
+        if i == 1:
+            dziesietna += mnozna
+        mnozna /= 2
+    return dziesietna
+
+def przeliczanieIpDziesietne(A, B, C, D):
+    IpDziesietne = []
+    IpDziesietne.append(int(przeliczanieDziesietne(A)))
+    IpDziesietne.append(int(przeliczanieDziesietne(B)))
+    IpDziesietne.append(int(przeliczanieDziesietne(C)))
+    IpDziesietne.append(int(przeliczanieDziesietne(D)))
+    return IpDziesietne
+
+
+def rozdzielanieIp(ip):
+    ipRozdzielone = [[],[],[],[]]
+    for i in range(4):
+        for j in range(8):
+            ipRozdzielone[i].append(ip[j + i * 8])
+    return ipRozdzielone
+
 def wypisywanieIpBinarne(ip):
     for i in range(32):
         print(ip[i], end="")
@@ -48,12 +73,24 @@ def laczenieIp(A, B, C, D):
         ip.append(i)
     return ip
 
+def PrzeliczanieMaskiBinarne(maska):
+    maskaBinarna = []
+    for i in range(maska):
+        maskaBinarna.append(1)
+    for i in range(32 - maska):
+        maskaBinarna.append(0)
+    return maskaBinarna
+
 Abin = przeliczanieBinarne(A)
 Bbin = przeliczanieBinarne(B)
 Cbin = przeliczanieBinarne(C)
 Dbin = przeliczanieBinarne(D)
 
 ipv4 = laczenieIp(Abin, Bbin, Cbin, Dbin)
+
+maskaBinarna = PrzeliczanieMaskiBinarne(maska)
+maskaBinarnaRozdzielona = rozdzielanieIp(maskaBinarna)
+maskaDziesietna = przeliczanieIpDziesietne(maskaBinarnaRozdzielona[0], maskaBinarnaRozdzielona[1], maskaBinarnaRozdzielona[2], maskaBinarnaRozdzielona[3])
 
 # Wypisywanie odpowiedzi
 if miesiacUrodzenia < 10:
@@ -62,3 +99,6 @@ else:
     print(f"Data Urodzenia: {dzienUrodzenia}.{miesiacUrodzenia}")
 print("Adres IP:", end=" ")
 wypisywanieIpNieBinarne(A, B, C, D)
+print(f"Maska CIDR: /{maska}")
+print("Maska dziesiętna:", end=" ")
+wypisywanieIpNieBinarne(maskaDziesietna[0], maskaDziesietna[1], maskaDziesietna[2], maskaDziesietna[3])
